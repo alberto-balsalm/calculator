@@ -5,11 +5,12 @@ getInput()
 
 function getInput() {
     let input = ""
+    let dot = document.querySelector('.dot')
     
     buttons.forEach(button => button.addEventListener('click', () => {
         let operators = '−+×÷'
         let numbers = ".0123456789"
-        let currButton = button.textContent
+        let currButton = button.textContent                    
         
 
         if(currButton == 'AC') {
@@ -35,8 +36,18 @@ function getInput() {
             else {
                 input += " " + currButton + " "
             }
-        } else if(numbers.includes(currButton)) { //just adding another digit 
-            input += currButton
+            dot.style["pointer-events"] = "auto" // enables dot button
+        } else if(numbers.includes(currButton)) { 
+            //adding dot
+
+            if(currButton == '.') {
+                input += currButton
+                dot.style.pointerEvents = "none" // disables click events on a div                
+            }
+                
+            //adding a digit
+            else if(currButton != '.')
+                input += currButton
         }
          
         
@@ -65,33 +76,33 @@ function operate(input) {
     for(let i = 0; i < inputArray.length; i++) {
         switch(inputArray[i]) {
             case '+':
-                inputArray.splice(i-1, 3, add(parseInt(inputArray[i-1]),parseInt(inputArray[i+1])))
+                inputArray.splice(i-1, 3, add(parseFloat(inputArray[i-1]),parseFloat(inputArray[i+1])))
                 i = 0
                 break
             case '−':
-                inputArray.splice(i-1, 3, add(parseInt(inputArray[i-1]),parseInt(inputArray[i+1])))
+                inputArray.splice(i-1, 3, subtract(parseFloat(inputArray[i-1]),parseFloat(inputArray[i+1])))
                 i = 0
                 break
         }
     }
     
 
-    return inputArray[0]
+    return inputArray
 }
 
 
 function add(a, b) {
-    return a + b
+    return Math.round((a + b) * 100) / 100
 }
 
 function subtract(a, b) {
-    return a - b
+    return Math.round((a - b) * 100) / 100
 }
 
 function multiply (a, b) {
-    return a * b
+    return Math.round((a * b) * 100) / 100
 }
 
 function divide (a, b) {
-    return a / b
+    return Math.round((a / b) * 100) / 100
 }
