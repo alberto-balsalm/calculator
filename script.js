@@ -4,28 +4,33 @@ const displayBottom = document.querySelector('.display-bottom')
 getInput()
 
 function getInput() {
-    let input = ""
-    let dot = document.querySelector('.dot')
+    let input = ""    
     
     buttons.forEach(button => button.addEventListener('click', () => {
         let operators = '−+×÷'
-        let numbers = ".0123456789"
+        let numbers = "0123456789"
         let currButton = button.textContent                    
         
 
         if(currButton == 'AC') {
             input = ""
+            enableDot()
 
         } else if(currButton == '←') {
             //removing operator and spaces
-            if(input[input.length - 1] == " ")
+            if(input[input.length - 1] == " ") {
                 input = input.slice(0,input.length - 3)
-            //removing a digit or a dot
-            else input = input.slice(0,input.length - 1)
+                if(isDot(input)) disableDot()
+            }//removing a digit or a dot
+            else {
+                if(input[input.length - 1] == ".") { enableDot() }
+                input = input.slice(0,input.length - 1)
+            }
         } else if(currButton == '=') {
             //perform only if number is at the end of input
             if(!operators.includes(input[input.length-2])) {
-                input = operate(input) //performing calculations
+                input = operate(input).toString() //performing calculations
+                console.log(input)
             }
         } else if(button.classList[1] == 'operator' && input.length) { 
             //if previously input character was an operator -> replace it
@@ -36,24 +41,35 @@ function getInput() {
             else {
                 input += " " + currButton + " "
             }
-            dot.style["pointer-events"] = "auto" // enables dot button
-        } else if(numbers.includes(currButton)) { 
-            //adding dot
-
-            if(currButton == '.') {
+            enableDot()
+        } else if(currButton == '.') { 
                 input += currButton
-                dot.style.pointerEvents = "none" // disables click events on a div                
-            }
-                
-            //adding a digit
-            else if(currButton != '.')
-                input += currButton
+                disableDot()                
+        } else {
+            input += currButton
         }
-         
+
         
         displayBottom.textContent = input
     }))
 
+}
+
+function enableDot() {
+    let dot = document.querySelector('.dot')
+    dot.style.pointerEvents = "auto"
+}
+
+function disableDot() {
+    let dot = document.querySelector('.dot')
+    dot.style.pointerEvents = "none"
+}
+
+function isDot(input) { //check if there's a dot in latest number
+    let dotIndex = input.lastIndexOf(".")
+    let spaceIndex = input.lastIndexOf(" ")
+    if(dotIndex > spaceIndex) return true
+    return false
 }
 
 function operate(input) {
@@ -86,6 +102,10 @@ function operate(input) {
         }
     }
     
+    //if calculated number is an integer adding dot is enabled
+    if(inputArray[0] % 1 == 0) enableDot()
+    //otherwise disable dot
+    else disableDot()
 
     return inputArray
 }
