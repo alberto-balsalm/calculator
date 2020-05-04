@@ -10,25 +10,37 @@ body {
     display: flex;
     flex-wrap: wrap;
     width: 12rem;
-    text-align: center;
     margin: auto;
+    overflow: hidden;
 }
 
+
+
 .display-top {
+    font-size: 0.6rem;
     width: 12rem;
-    height: 1.5rem;
+    height: 1.6rem;
     border: 1px solid black;
+    text-align: right;
+    overflow-y: scroll;
 }
 .display-bottom {
+    font-size: 1rem;
     width: 12rem;
     height: 3em;
     border: 1px solid black;
+    text-align: right;
+    overflow-y: scroll;
 }
 
 .button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     border: 1px solid black;
     height: 3rem;
     width: 3rem;
+
 }
 
 #clear-button {
